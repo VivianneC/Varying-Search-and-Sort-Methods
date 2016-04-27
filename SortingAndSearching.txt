@@ -1,0 +1,253 @@
+#include <iostream> //Preprocessor Directives
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+string bookTitle[] = {"Starting out with C++", "Java Programming","Software Structures", "Design and Analysis of Algorithms", "Computer Graphics", //Defining arrays globally
+                    "Artificial Intelligence: A Modern Approach", "Probability and Statistics", "Cognitive Science", "Modern Information Retrieval",
+                    "Speech and Language Processing"};
+int bookID[] = {1101, 1211, 1333, 1456, 1567, 1642, 1699, 1755, 1800, 1999};
+double bookPrice[] = {112.32, 73.25, 54.00, 67.32, 135.00, 173.22, 120.00, 42.25, 32.11, 123.75};
+
+int menu()
+{
+    int choice; //local variables
+
+    do
+    {
+    cout << "1. Linear Search" << endl; //menu
+    cout << "2. Binary Search" << endl;
+    cout << "3. Bubble Sort" << endl;
+    cout << "4. Selection Sort" << endl;
+    cout << "5. Quit" << endl;
+    cout << " Enter you choice: ";
+    cin >> choice;
+    cout << endl;
+    }
+    while(choice < 1 || choice > 5);
+
+    return choice;
+}
+void display(string bookTitle[], int bookID[], double bookPrice[])
+{
+
+   cout << "Book ID  Title                                          Cost\n";
+  for (int i=0; i<10; i++)
+  {
+    cout << setprecision(2) << fixed;
+    cout << bookID[i] << "\t " << setw(40) << left << bookTitle[i] << "\t$" << bookPrice[i] << endl;
+  }
+  cout << endl << endl;
+}
+
+int linearSearch(int bookID[],int ID) //function for linear searching
+{
+    int index = 0; //local variables
+    int place = -1;
+    bool flag = false;
+
+    while (index < 10 && !flag)
+    {
+        if(bookID[index] == ID)
+        {
+            flag = true;
+            place = index;
+        }
+        index++;
+    }
+    return place;
+}
+int binarySearch(int bookID[], int id) //function for binary searching
+{
+    int first = 0; //first array element
+    int last = 9; //last array element
+    int middle; //middle search point
+    int place = -1; //search value's position
+    bool flag = false; //flag variable
+
+    while (!flag && first <= last)
+    {
+        middle = (first + last) / 2; //calculating the middle point
+        if (bookID[middle] == id) //if the value is found at the middle
+        {
+            flag = true;
+            place = middle;
+        }
+    else if (bookID[middle] > id) //if the value is in the lower half
+        {
+            last = middle - 1;
+        }
+    else
+    first = middle + 1; //if the value is in the upper half
+    }
+    return place;
+
+}
+
+void bubbleSort(int sorting[], int size1) //function for bubble sorting
+{
+    bool swapping; //local variables
+    int temp;
+
+    do
+    {
+        swapping = false;
+        for(int i=0; i < (size1-1); i++)
+        {
+            if(sorting[i] > sorting[i + 1])
+            {
+                temp = sorting[i];
+                sorting[i] = sorting[i +1];
+                sorting[i+1] = temp;
+                swapping = temp;
+            }
+        }
+    } while(swapping);
+}
+
+void selectionSort(int sorting[], int size1) //function for selection sorting
+{
+    int startScan, minIndex, minValue; //local variables
+
+    for (startScan = 0; startScan < (size1-1); startScan++)
+    {
+        minIndex = startScan;
+        minValue = sorting[startScan];
+
+        for(int index = startScan + 1; index < size1; index++)
+        {
+            if (sorting[index] < minValue)
+            {
+                minValue = sorting[index];
+                minIndex = index;
+            }
+
+        }
+
+        sorting[minIndex] = sorting[startScan];
+        sorting[startScan] = minValue;
+    }
+}
+
+int main()
+{
+    int choice; //local variables
+    int num;
+    int ID;
+    int index;
+    double totalPrice;
+
+    do{
+        choice = menu();
+
+        if (choice ==1) //if user chooses linear search
+        {
+            cout << "-Linear Search-" << endl;
+            display(bookTitle,bookID,bookPrice);
+            cout << "Please enter the book ID: ";
+            cin >> ID;
+            index = linearSearch(bookID, ID);
+
+            while (index == -1) //input validation
+            {
+                cout << "Search was inconclusive. Enter a valid book ID: ";
+                cin >> ID;
+                index = linearSearch(bookID,ID);
+            }
+
+            cout << "Enter the number of copies you want to buy: ";
+            cin >> num;
+            cout << endl;
+
+            totalPrice = bookPrice[index] * num;
+
+            cout << "ID: " << bookID[index];
+            cout << "\tTitle: " << bookTitle[index];
+            cout << "\tNumber of copies: " << num;
+            cout << "\nBook Price: $" << bookPrice[index];
+            cout << "\tTotal Price: $" << totalPrice << endl << endl;
+
+        }
+
+        else if (choice == 2) //if user chooses binary search
+        {
+            cout << "-Binary Search-" << endl;
+            display(bookTitle,bookID,bookPrice);
+            cout << "Enter the book ID: ";
+            cin >> ID;
+            index = binarySearch(bookID, ID);
+            while(index == -1) //input validation
+            {
+                cout << "Search was inconclusive. Enter a valid book ID: ";
+                cin >> ID;
+                index = binarySearch(bookID, ID);
+            }
+            cout << "Please enter the number of copies you wish to buy: ";
+            cin >> num;
+
+            totalPrice = bookPrice[index] * num;
+
+            cout << "ID: " << bookID[index];
+            cout << "\tTitle: " << bookTitle[index];
+            cout << "\tNumber of copies: " << num;
+            cout << "\nBook Price: " << bookPrice[index];
+            cout << "\tTotal Price: " << totalPrice << endl << endl;
+        }
+
+        else if(choice ==3) //if the user chooses bubble sort
+        {
+            cout << "-Bubble Sort-" << endl;
+            int sortingArray[500];
+            srand(time(NULL));
+            cout << "Unsorted Array: " << endl;
+
+            for (int i=0; i < 500; i++)
+            {
+                sortingArray[i] = rand() % 500 + 1; //assigning random numbers
+                cout << sortingArray[i] << " ";
+            }
+
+            bubbleSort(sortingArray,1000);
+
+            cout << endl;
+
+            cout << "Sorted Array: " << endl;
+            for (int i=0; i < 1000; i++)
+            {
+                cout << sortingArray[i] << " ";
+            }
+            cout << endl << endl;
+
+        }
+
+        else if (choice == 4) //if the user chooses selection sort
+        {
+            cout << "-Selection Sort-" << endl;
+            int newarray[1000];
+            srand(time(NULL));
+            cout << "Unsorted: " << endl;
+            for (int i=0; i < 1000; i++)
+            {
+                newarray[i] = rand() % 500 + 1; //assigning random numbers
+                cout << newarray[i] << " ";
+            }
+
+            selectionSort(newarray, 1000);
+             cout << endl;
+            cout << "Sorted: " << endl;
+            for (int i=0; i < 500; i++)
+            {
+                cout << newarray[i] << " ";
+            }
+            cout << endl << endl;
+        }
+
+        else if (choice == 5) //if the user chooses to exit the program
+            exit(0);
+
+    }while (choice != 5);
+
+    return 0;
+}
